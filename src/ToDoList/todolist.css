@@ -1,0 +1,21 @@
+.container {
+  background-color: blueviolet;
+  padding: 10px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.todo-task {
+  margin: 20px;
+  display: flex;
+  color: white;
+  align-items: center;
+  justify-content: space-between;
+  border: 2px solid rgb(226, 221, 221);
+  padding: 10px;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: white;
+}
