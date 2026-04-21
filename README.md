@@ -28,3 +28,4 @@ MACHINE COADING QUESTION
 
 1. To-do App
 2. Pagination
+3. AutoSearch (Debounce)
