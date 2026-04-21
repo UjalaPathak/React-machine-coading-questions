@@ -1,0 +1,25 @@
+.header-container {
+  display: flex;
+}
+
+.header {
+  padding: 10px;
+  border: 1px solid;
+  cursor: pointer;
+}
+
+.tab-body {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  width: 400px;
+  border: 2px solid;
+  padding: 5px;
+}
+
+.prev-next-button {
+  position: sticky;
+}
+.validation-text {
+  color: red;
+}

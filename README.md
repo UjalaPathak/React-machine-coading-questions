@@ -17,6 +17,13 @@ npm install uuid
 npm install @fortawesome/react-fontawesome
 npm install @fortawesome/free-solid-svg-icons
 
+
+
+Clarify the statements first (talk to interviewer)
+define the scope (what would you do)
+
+
+
 MACHINE COADING QUESTION
 
 1. To-do App

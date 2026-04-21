@@ -1,0 +1,45 @@
+.container {
+  max-width: 450px;
+  background-color: aquamarine;
+  max-height: 500px;
+  margin: 2px auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-button {
+  margin: 1px;
+  margin-left: 10px;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.search-field {
+  padding: 5px;
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  padding: 10px;
+  margin: 2px;
+}
+
+.item-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.struck-out-text {
+  text-decoration: line-through;
+}
+
+.items {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
