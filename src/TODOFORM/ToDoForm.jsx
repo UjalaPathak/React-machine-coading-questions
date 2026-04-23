@@ -1,55 +1,120 @@
-import { faDiceOne } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
-import "../TODOFORM/todoform.css";
+import "./todoForm.css";
 
-function ToDoForm() {
-  const [addItem, setAddItem] = useState("");
-  const [value, setValue] = useState([]);
-  const handleAddButton = () => {
-    setValue((prev) => [
+export default function ToDoForm() {
+  const [search, setSearch] = useState("");
+  const [data, setData] = useState([]);
+  const handleAddData = (e) => {
+    setData((prev) => [
       ...prev,
-      {
-        text: addItem,
-        done: false,
-        isEdit: false,
-      },
+      { text: search, isCompleted: false, isEditable: false },
     ]);
-    setAddItem("");
+    setSearch("");
   };
-  const handleCancel = (index) => {
-    const data = value.filter((item, idx) => idx !== index);
-    setValue(data);
+  console.log("data", data);
+
+  const handleCrossButton = (index1) => {
+    const value = data.filter((value, index) => index !== index1);
+    setData(value);
   };
 
-  const handleCheckbox = (index) => {
-    value.map((item, index) =>
-      setValue((prev) => [...prev, { text: item.text, done: !item.done }]),
+  const handleCompleted = (index1) => {
+    setData(
+      data.map((value, index) => {
+        if (index === index1) {
+          return {
+            ...value,
+            isCompleted: !value.isCompleted,
+          };
+        }
+        return value;
+      }),
     );
   };
 
+  const handleEditButton = (indexq) => {
+    setData(
+      data.map((value, index) => {
+        if (index === indexq) {
+          return {
+            ...value,
+            isEditable: !value.isEditable,
+          };
+        }
+        return value;
+      }),
+    );
+  };
+
+  const handleChange = (e, index1) => {
+    const value = data.map((value, index) => {
+      if (index === index1) {
+        return {
+          ...value,
+          text: e.target.value,
+        };
+      } else {
+        return value;
+      }
+    });
+    setData(value);
+  };
+
+  const handleKeyDown = (e, index1) => {
+    if (e.key == "Enter") {
+      setData(
+        data.map((value, index) => {
+          if (index === index1) {
+            return {
+              ...value,
+              isEditable: !value.isEditable,
+            };
+          } else {
+            return value;
+          }
+        }),
+      );
+    }
+  };
   return (
     <div>
+      <h1>ToDoForm</h1>
       <div>
         <input
-          type="text"
-          value={addItem}
-          onChange={(e) => setAddItem(e.target.value)}
+          type="serach"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
-        <button type="submit" onClick={handleAddButton}>
-          Add
-        </button>
+        <button onClick={(e) => handleAddData(e)}>Add</button>
       </div>
-      <div className="">
-        {value.map((item, idx) => (
-          <div className="items" key={idx}>
-            <input type="checkbox" onClick={() => handleCheckbox(idx)} />
-            <p>{item.text}</p>
-            <button onClick={() => handleCancel(idx)}>X</button>
-          </div>
-        ))}
+      <div>
+        {data &&
+          data.map((value, index) => {
+            console.log("value", value);
+            return (
+              <div key={index}>
+                <input
+                  type="checkbox"
+                  onChange={() => handleCompleted(index)}
+                />
+                {value.isEditable ? (
+                  <input
+                    type="text"
+                    value={value.text}
+                    onChange={(e) => handleChange(e, index)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                  />
+                ) : (
+                  <span className={value.isCompleted ? "struck-out-text" : ""}>
+                    {value.text}
+                  </span>
+                )}{" "}
+                <button onClick={() => handleEditButton(index)}>Edit</button>
+                <button onClick={() => handleCrossButton(index)}>X</button>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
 }
-
-export default ToDoForm;

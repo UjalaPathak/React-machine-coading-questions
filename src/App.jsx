@@ -13,6 +13,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SearchBar />} />
+        <Route path="/todo" element={<ToDoForm />} />
         <Route path="/pagination" element={<Pagination />} />
         <Route path="/tabForm" element={<TabForm />} />
       </Routes>
