@@ -1,96 +1,89 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./searchInput.css";
-
 function SearchBar() {
-  const [value, setValue] = useState("");
-  const [results, setResults] = useState([]);
-  const [showResults, setShowResults] = useState(false);
+  const [search, setSearch] = useState("");
+  const [data, setData] = useState([]);
+  const [show, setShow] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(1);
   const [cache, setCache] = useState({});
-  const [activeIndex, setActiveIndex] = useState(-1);
 
-  const handleChange = (e) => {
-    setValue(e.target.value);
+  const getAPi = async () => {
+    console.log("api");
+    const value = await fetch(
+      "https://dummyjson.com/recipes/search?q=" + search,
+    );
+    const data = await value.json();
+    setData(data?.recipes);
+    setCache((prev) => ({
+      ...prev,
+      [search]: data?.recipes,
+    }));
+    setShow(true);
   };
 
-  const data = async () => {
-    if (cache[value]) {
-      console.log("cache", cache[value]);
-      setResults(cache[value]);
+  console.log("cache", cache);
+  useEffect(() => {
+    if (!search) return;
+    if (cache[search]) {
+      setData(cache[search]);
       return;
     }
-    const returnedvalue = await fetch(
-      "https://dummyjson.com/recipes/search?q=" + value,
-    );
-    const data = await returnedvalue.json();
-    setResults(data?.recipes);
-    setCache((prev) => ({ ...prev, [value]: data?.recipes }));
-  };
-
-  useEffect(() => {
-    let timeId;
-    if (!value) return;
-    timeId = setTimeout(() => {
-      data();
-    }, 500);
+    let timeid;
+    timeid = setTimeout(() => {
+      getAPi();
+    }, 1000);
     return () => {
-      clearTimeout(timeId); // ✅ clears previous timer
+      clearTimeout(timeid);
     };
-  }, [value]);
+  }, [search]);
 
-  const handleKeyDown = (e) => {
-    if (!results.length) return;
+  console.log("activeIndex", activeIndex);
 
+  const handleActiveIndex = (e) => {
     if (e.key === "ArrowDown") {
-      setActiveIndex((prev) => (prev < results.length - 1 ? prev + 1 : prev));
+      setActiveIndex((prev) => (prev < data.length - 1 ? prev + 1 : prev));
     }
 
     if (e.key === "ArrowUp") {
-      setActiveIndex((prev) => (prev > 0 ? prev - 1 : -1));
-    }
-
-    if (e.key === "Enter") {
-      if (activeIndex >= 0) {
-        setValue(results[activeIndex].name);
-        setShowResults(false);
-        setActiveIndex(-1);
-      }
+      setActiveIndex((prev) => (prev > 0 ? prev - 1 : prev));
     }
   };
 
   return (
     <div>
-      <h1>AutoComplete SearchBar</h1>
+      SearchBar
       <div>
         <input
-          className="search-input"
-          value={value}
-          onChange={(e) => handleChange(e)}
-          onBlur={() => setShowResults(false)}
-          onFocus={() => setShowResults(true)}
-          onKeyDown={handleKeyDown}
+          type="text"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+          }}
+          style={{ width: "300px", padding: "5px" }}
+          onKeyDown={handleActiveIndex}
         />
-
-        {showResults && (
-          <div className="result-container">
-            {results.map((value, index) => (
-              <span
-                className="result"
-                key={value.id}
-                style={{
-                  backgroundColor: index === activeIndex ? "#eee" : "white",
-                }}
-                onMouseDown={(e) => e.preventDefault()} // 🔥 prevents blur
-                onClick={() => {
-                  setValue(value.name); // ✅ set input value
-                  setShowResults(false); // ✅ close dropdown
-                }}
+      </div>
+      {show ? (
+        <div
+          style={{
+            width: "300px",
+            maxHeight: "500px",
+            border: "1px solid",
+            padding: "5px",
+            overflow: "scroll",
+          }}
+        >
+          {data &&
+            data?.map((value, index) => (
+              <p
+                className={index == activeIndex ? "showIndex" : ""}
+                key={index}
               >
                 {value.name}
-              </span>
+              </p>
             ))}
-          </div>
-        )}
-      </div>
+        </div>
+      ) : null}
     </div>
   );
 }
